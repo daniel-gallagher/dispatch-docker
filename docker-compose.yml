@@ -1,27 +1,36 @@
 version: "3.4"
-x-restart-policy: &restart_policy
-  restart: unless-stopped
-x-dispatch-defaults: &dispatch_defaults
-  <<: *restart_policy
-  build:
-    context: https://github.com/daniel-gallagher/dispatch.git#develop
-  image: dispatch-local
-  env_file:
-    - .env
-  depends_on:
-    - postgres
+
 services:
   postgres:
-    <<: *restart_policy
+    restart: unless-stopped
     image: "postgres:9.6"
+    env_file:
+      - .env
     volumes:
       - "dispatch-postgres:/var/lib/postgresql/data"
+
   web:
-    <<: *dispatch_defaults
+    build:
+      context: https://github.com/daniel-gallagher/dispatch.git#develop
+    image: dispatch-local
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    ports:
+      - 8000:8000
     command: ["server", "start", "dispatch.main:app"]
+
   dispatch-scheduler:
-    <<: *dispatch_defaults
+    image: dispatch-local
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - web
+    restart: unless-stopped
     command: ["scheduler", "start"]
+
 volumes:
   dispatch-postgres:
-    external: true
