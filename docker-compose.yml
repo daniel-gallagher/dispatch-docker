@@ -5,8 +5,9 @@ x-dispatch-defaults: &dispatch_defaults
   <<: *restart_policy
   build:
     context: https://github.com/daniel-gallagher/dispatch.git#develop
-    dockerfile: docker/Dockerfile
   image: dispatch-local
+  env_file:
+    - .env
   depends_on:
     - postgres
 services:
@@ -17,8 +18,10 @@ services:
       - "dispatch-postgres:/var/lib/postgresql/data"
   web:
     <<: *dispatch_defaults
+    command: ["server", "start", "dispatch.main:app"]
   dispatch-scheduler:
     <<: *dispatch_defaults
+    command: ["scheduler", "start"]
 volumes:
   dispatch-postgres:
     external: true
