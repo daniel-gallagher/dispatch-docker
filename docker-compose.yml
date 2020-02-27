@@ -4,7 +4,7 @@ x-restart-policy: &restart_policy
 x-dispatch-defaults: &dispatch_defaults
   <<: *restart_policy
   build:
-    context: https://github.com/Netflix/dispatch.git#master
+    context: https://github.com/daniel-gallagher/dispatch.git#develop
     dockerfile: docker/Dockerfile
   image: dispatch-local
   depends_on:
