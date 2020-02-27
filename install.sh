@@ -106,9 +106,9 @@ fi
 echo ""
 echo "Setting up database..."
 if [ $CI ]; then
-  docker-compose run --rm dispatch database upgrade --noinput
+  docker-compose run --rm web database upgrade --noinput
 else
-  docker-compose run --rm dispatch database upgrade
+  docker-compose run --rm web database upgrade
 fi
 
 cleanup
