@@ -106,7 +106,7 @@ echo "Setting up database..."
 if [ $CI ]; then
   docker-compose run --rm web database upgrade --noinput
 else
-  docker-compose run --rm web database upgrade
+  docker-compose run --rm web database init
 fi
 
 cleanup
